@@ -1,6 +1,3 @@
-import { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-
 const PLACEHOLDER_IMAGES = [
   'https://images.pexels.com/photos/1024960/pexels-photo-1024960.jpeg?auto=compress&cs=tinysrgb&w=800',
   'https://images.pexels.com/photos/1310532/pexels-photo-1310532.jpeg?auto=compress&cs=tinysrgb&w=800',
@@ -10,75 +7,59 @@ const PLACEHOLDER_IMAGES = [
 ];
 
 export default function ImageCarousel() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % PLACEHOLDER_IMAGES.length);
-    }, 4000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const goToNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % PLACEHOLDER_IMAGES.length);
-  };
-
-  const goToPrevious = () => {
-    setCurrentIndex((prev) =>
-      prev === 0 ? PLACEHOLDER_IMAGES.length - 1 : prev - 1
-    );
-  };
-
   return (
-    <div className="relative w-full max-w-2xl mx-auto">
-      <div className="relative h-64 md:h-96 rounded-3xl overflow-hidden shadow-2xl">
-        {PLACEHOLDER_IMAGES.map((image, index) => (
+    <div className="w-full">
+      <style>{`
+        @keyframes infiniteScroll {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(calc(-100% / ${PLACEHOLDER_IMAGES.length}));
+          }
+        }
+
+        .carousel-container {
+          animation: infiniteScroll 40s linear infinite;
+        }
+
+        .carousel-container:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
+
+      <div className="relative w-full overflow-hidden rounded-3xl shadow-2xl">
+        <div className="h-64 md:h-96 bg-gradient-to-b from-rose-100 to-pink-100">
           <div
-            key={index}
-            className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
-              index === currentIndex ? 'opacity-100' : 'opacity-0'
-            }`}
+            className="carousel-container h-full flex"
+            style={{
+              width: `${PLACEHOLDER_IMAGES.length * 100}%`,
+            }}
           >
-            <img
-              src={image}
-              alt={`Romantic moment ${index + 1}`}
-              className="w-full h-full object-cover"
-            />
+            {[...PLACEHOLDER_IMAGES, ...PLACEHOLDER_IMAGES].map((image, index) => (
+              <div
+                key={index}
+                className="h-full flex-shrink-0"
+                style={{
+                  width: `${100 / PLACEHOLDER_IMAGES.length}%`,
+                }}
+              >
+                <img
+                  src={image}
+                  alt={`Romantic moment ${(index % PLACEHOLDER_IMAGES.length) + 1}`}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ))}
           </div>
-        ))}
 
-        <button
-          onClick={goToPrevious}
-          className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-sm p-2 rounded-full hover:bg-white transition-all hover:scale-110 shadow-lg"
-          aria-label="Previous image"
-        >
-          <ChevronLeft className="w-6 h-6 text-rose-500" />
-        </button>
-
-        <button
-          onClick={goToNext}
-          className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-sm p-2 rounded-full hover:bg-white transition-all hover:scale-110 shadow-lg"
-          aria-label="Next image"
-        >
-          <ChevronRight className="w-6 h-6 text-rose-500" />
-        </button>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/10 via-transparent to-black/10 pointer-events-none" />
+        </div>
       </div>
 
-      <div className="flex justify-center gap-2 mt-6">
-        {PLACEHOLDER_IMAGES.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentIndex(index)}
-            className={`h-2 rounded-full transition-all duration-300 ${
-              index === currentIndex
-                ? 'w-8 bg-rose-400'
-                : 'w-2 bg-rose-200 hover:bg-rose-300'
-            }`}
-            aria-label={`Go to image ${index + 1}`}
-          />
-        ))}
-      </div>
+      <p className="text-center text-sm text-rose-300 mt-4 italic">
+        Hover to pause the carousel
+      </p>
     </div>
   );
 }
