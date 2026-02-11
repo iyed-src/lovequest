@@ -1,10 +1,20 @@
-const PLACEHOLDER_IMAGES = [
-  'https://images.pexels.com/photos/1024960/pexels-photo-1024960.jpeg?auto=compress&cs=tinysrgb&w=800',
-  'https://images.pexels.com/photos/1310532/pexels-photo-1310532.jpeg?auto=compress&cs=tinysrgb&w=800',
-  'https://images.pexels.com/photos/1571848/pexels-photo-1571848.jpeg?auto=compress&cs=tinysrgb&w=800',
-  'https://images.pexels.com/photos/1743165/pexels-photo-1743165.jpeg?auto=compress&cs=tinysrgb&w=800',
-  'https://images.pexels.com/photos/1024967/pexels-photo-1024967.jpeg?auto=compress&cs=tinysrgb&w=800',
+const  PLACEHOLDER_IMAGES = [
+  'https://drive.google.com/file/d/1dPCxJ_PK6nxuPtME3WSU0we7E-HmoLps/view?usp=drive_link',
+  'https://drive.google.com/file/d/1kS4tKUL8nq0E1XloxSM1cGCHHoRGDfT8/view?usp=drive_link',
+  'https://drive.google.com/file/d/1EvmZOd1LnfVtEiI1W4773e4KIzFPMWuN/view?usp=drive_link',
+  'https://drive.google.com/file/d/1oJJ7A0Q_5llyBmyABfFbuCmGaqTzx1TQ/view?usp=drive_link',
+  'https://drive.google.com/file/d/1_l3fJnXmMEx4_yoyN_XB4DZnrr7k70br/view?usp=drive_link',
+  'https://drive.google.com/file/d/1xykJOQjZlrcgidgDs2qhGp7V8N7VQHQJ/view?usp=drive_link',
 ];
+
+// Helper to convert Drive view links to direct image links
+const getDirectDriveLink = (url: string) => {
+  const idMatch = url.match(/\/d\/(.+?)\//);
+  if (idMatch && idMatch[1]) {
+    return `https://lh3.googleusercontent.com/d/${idMatch[1]}`;
+  }
+  return url;
+};
 
 export default function ImageCarousel() {
   const cardWidth = 280;
@@ -34,7 +44,8 @@ export default function ImageCarousel() {
 
       <div className="relative w-full overflow-hidden py-4">
         <div className="carousel-scroll flex gap-6" style={{ width: 'fit-content' }}>
-          {[...PLACEHOLDER_IMAGES, ...PLACEHOLDER_IMAGES, ...PLACEHOLDER_IMAGES].map(
+          {[...PLACEHOLDER_IMAGES, ...PLACEHOLDER_IMAGES, ...PLACEHOLDER_IMAGES, ...PLACEHOLDER_IMAGES].map(
+          // {PLACEHOLDER_IMAGES.map(
             (image, index) => (
               <div
                 key={index}
@@ -45,8 +56,8 @@ export default function ImageCarousel() {
                 }}
               >
                 <img
-                  src={image}
-                  alt={`Romantic moment ${(index % totalImages) + 1}`}
+                  src={getDirectDriveLink(image)}
+                  alt={`lovey lovey ${(index % totalImages) + 1}`}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -55,9 +66,9 @@ export default function ImageCarousel() {
         </div>
       </div>
 
-      <p className="text-center text-sm text-rose-300 mt-6 italic">
+      {/* <p className="text-center text-sm text-rose-300 mt-6 italic">
         Hover to pause the carousel
-      </p>
+      </p> */}
     </div>
   );
 }
