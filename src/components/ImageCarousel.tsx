@@ -7,57 +7,55 @@ const PLACEHOLDER_IMAGES = [
 ];
 
 export default function ImageCarousel() {
+  const cardWidth = 280;
+  const gap = 24;
+  const totalImages = PLACEHOLDER_IMAGES.length;
+
   return (
     <div className="w-full">
       <style>{`
-        @keyframes infiniteScroll {
+        @keyframes infiniteCarousel {
           0% {
             transform: translateX(0);
           }
           100% {
-            transform: translateX(calc(-100% / ${PLACEHOLDER_IMAGES.length}));
+            transform: translateX(-${totalImages * (cardWidth + gap)}px);
           }
         }
 
-        .carousel-container {
-          animation: infiniteScroll 40s linear infinite;
+        .carousel-scroll {
+          animation: infiniteCarousel 50s linear infinite;
         }
 
-        .carousel-container:hover {
+        .carousel-scroll:hover {
           animation-play-state: paused;
         }
       `}</style>
 
-      <div className="relative w-full overflow-hidden rounded-3xl shadow-2xl">
-        <div className="h-64 md:h-96 bg-gradient-to-b from-rose-100 to-pink-100">
-          <div
-            className="carousel-container h-full flex"
-            style={{
-              width: `${PLACEHOLDER_IMAGES.length * 100}%`,
-            }}
-          >
-            {[...PLACEHOLDER_IMAGES, ...PLACEHOLDER_IMAGES].map((image, index) => (
+      <div className="relative w-full overflow-hidden py-4">
+        <div className="carousel-scroll flex gap-6" style={{ width: 'fit-content' }}>
+          {[...PLACEHOLDER_IMAGES, ...PLACEHOLDER_IMAGES, ...PLACEHOLDER_IMAGES].map(
+            (image, index) => (
               <div
                 key={index}
-                className="h-full flex-shrink-0"
+                className="flex-shrink-0 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 cursor-pointer transform hover:scale-105"
                 style={{
-                  width: `${100 / PLACEHOLDER_IMAGES.length}%`,
+                  width: `${cardWidth}px`,
+                  height: `${cardWidth}px`,
                 }}
               >
                 <img
                   src={image}
-                  alt={`Romantic moment ${(index % PLACEHOLDER_IMAGES.length) + 1}`}
+                  alt={`Romantic moment ${(index % totalImages) + 1}`}
                   className="w-full h-full object-cover"
                 />
               </div>
-            ))}
-          </div>
-
-          <div className="absolute inset-0 bg-gradient-to-r from-black/10 via-transparent to-black/10 pointer-events-none" />
+            )
+          )}
         </div>
       </div>
 
-      <p className="text-center text-sm text-rose-300 mt-4 italic">
+      <p className="text-center text-sm text-rose-300 mt-6 italic">
         Hover to pause the carousel
       </p>
     </div>
